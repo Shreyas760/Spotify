@@ -19,7 +19,7 @@ function secondsToMinutesSeconds(seconds) {
 
 async function getSongs(folder) {
     currFolder = folder;
-    let a = await fetch(`http://127.0.0.1:5500/Spotify/${folder}/`)
+    let a = await fetch(`/${folder}/`)
     let response = await a.text();
     // console.log(response)
     let div = document.createElement("div")
@@ -31,7 +31,6 @@ async function getSongs(folder) {
         if (element.href.endsWith(".mp3")) {
             songs.push(element.href.split(`/${folder}/`)[1]);
         }
-
     }
 
     // show all the songs in the playlist 
@@ -61,7 +60,7 @@ async function getSongs(folder) {
 }
 
 const playMusic = (track, pause) => {
-    currentSong.src = `${currFolder}/` + track;
+    currentSong.src = `/${currFolder}/` + track;
     if (!pause) {
         currentSong.play();
         play.src = "img/pause.svg";
@@ -72,7 +71,7 @@ const playMusic = (track, pause) => {
 
 async function displayAlbums() {
     try {
-        let a = await fetch(`http://127.0.0.1:5500/Spotify/songs/`)
+        let a = await fetch(`/songs/`)
         let response = await a.text()
         let div = document.createElement("div")
         div.innerHTML = response;
@@ -91,7 +90,7 @@ async function displayAlbums() {
                     let folder = folderMatch[1];
                     
                     try {
-                        let a = await fetch(`http://127.0.0.1:5500/Spotify/songs/${folder}/info.json`);
+                        let a = await fetch(`/songs/${folder}/info.json`);
                         
                         if (!a.ok) {
                             console.warn(`Could not fetch info.json for ${folder}: ${a.status}`);
@@ -107,13 +106,13 @@ async function displayAlbums() {
                         let response = await a.json();
                         
                         cardContainer.innerHTML = cardContainer.innerHTML + `<div data-folder="${folder}" class="card">
-                                    <div class="play">
-                                        <img src="img/play.svg" alt="">
-                                    </div>
-                                    <img src="/Spotify/songs/${folder}/cover.jpg" alt="">
-                                    <h2>${response.title}</h2>
-                                    <p>${response.description}</p>
-                                </div>`
+                                        <div class="play">
+                                            <img src="img/play.svg" alt="">
+                                        </div>
+                                        <img src="/songs/${folder}/cover.jpg" alt="">
+                                        <h2>${response.title}</h2>
+                                        <p>${response.description}</p>
+                                    </div>`
                     } catch (error) {
                         console.error(`Error loading album info for ${folder}:`, error);
                     }
@@ -276,7 +275,7 @@ main()
 
 
 // async function displayAlbums() {
-//     let a = await fetch(`http://127.0.0.1:5500/Spotify/songs/`)
+//     let a = await fetch(`/songs/`)
 //     let response = await a.text()
 //     let div = document.createElement("div")
 //     div.innerHTML = response;
@@ -286,7 +285,7 @@ main()
 //         if(e.href.includes("/songs")){
 //             let folder = e.href.split("/").slice(-2)[0]
 //             // Get the metadata of the folder 
-//             let a = await fetch(`http://127.0.0.1:5500/Spotify/songs/${folder}/info.json`);
+//             let a = await fetch(`/songs/${folder}/info.json`);
 //             let response = await a.json();
 //             console.log(response)
 //             cardContainer.innerHTML = cardContainer.innerHTML + `<div data-folder="${folder}" class="card">
